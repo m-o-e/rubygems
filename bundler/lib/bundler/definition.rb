@@ -144,7 +144,7 @@ module Bundler
       @dependency_changes = converge_dependencies
       @local_changes = converge_locals
 
-      @locked_specs_incomplete_for_platform = !@locked_specs.for(requested_dependencies & expand_dependencies(locked_dependencies), true)
+      @locked_specs_incomplete_for_platform = !@locked_specs.for(requested_dependencies & locked_dependencies, true)
 
       @requires = compute_requires
     end
@@ -243,10 +243,9 @@ module Bundler
 
     def dependencies_for(groups)
       groups.map!(&:to_sym)
-      deps = current_dependencies.reject do |d|
+      current_dependencies.reject do |d|
         (d.groups & groups).empty?
       end
-      expand_dependencies(deps)
     end
 
     # Resolve all the dependencies specified in Gemfile. It ensures that
