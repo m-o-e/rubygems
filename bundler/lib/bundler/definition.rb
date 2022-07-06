@@ -263,7 +263,7 @@ module Bundler
       else
         last_resolve = converge_locked_specs
         Bundler.ui.debug("Found changes from the lockfile, re-resolving dependencies because #{change_reason}")
-        expanded_dependencies = expand_dependencies(dependencies + metadata_dependencies, true)
+        expanded_dependencies = expand_dependencies(dependencies + metadata_dependencies)
         Resolver.resolve(expanded_dependencies, source_requirements, last_resolve, gem_version_promoter, additional_base_requirements_for_resolve, platforms)
       end
     end
@@ -737,11 +737,10 @@ module Bundler
       ]
     end
 
-    def expand_dependencies(dependencies, remote = false)
+    def expand_dependencies(dependencies)
       deps = []
       dependencies.each do |dep|
-        next unless remote || dep.current_platform?
-        target_platforms = dep.gem_platforms(remote ? @platforms : [generic_local_platform])
+        target_platforms = dep.gem_platforms(@platforms)
         deps += expand_dependency_with_platforms(dep, target_platforms)
       end
       deps
