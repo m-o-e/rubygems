@@ -13,7 +13,8 @@ module Bundler
 
     def for(dependencies, check = false, platforms = [Bundler.local_platform])
       handled = {}
-      deps = dependencies.map(&:name).product(platforms)
+      names = dependencies.map {|dep| dep.respond_to?(:name) ? dep.name : dep }
+      deps = names.product(platforms)
       specs = []
 
       loop do
