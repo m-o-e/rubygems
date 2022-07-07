@@ -151,7 +151,11 @@ module Bundler
             next groups if @resolving_only_for_ruby || dependency.force_ruby_platform
 
             spec_group = SpecGroup.create_for(specs_by_platform, @platforms, platform)
-            groups << spec_group
+            if spec_group_ruby && dependencies_equal?(dependencies_for(spec_group), dependencies_for(spec_group_ruby))
+              groups[-1] = spec_group
+            else
+              groups << spec_group
+            end
 
             groups
           end
