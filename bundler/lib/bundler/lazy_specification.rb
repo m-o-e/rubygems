@@ -78,9 +78,6 @@ module Bundler
     def materialize_for_installation
       source.local!
 
-      @specification = materialize_gemspec_source
-      return @specification if @specification
-
       candidates = if source.is_a?(Source::Path) || !ruby_platform_materializes_to_ruby_platform?
         target_platform = ruby_platform_materializes_to_ruby_platform? ? platform : Bundler.local_platform
 
@@ -138,12 +135,6 @@ module Bundler
     end
 
     private
-
-    def materialize_gemspec_source
-      if source.is_a?(Source::Gemspec) && source.gemspec.name == name
-        source.gemspec.tap {|s| s.source = source }
-      end
-    end
 
     def to_ary
       nil
